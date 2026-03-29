@@ -1,0 +1,775 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Happy Birthday Shreya!</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Inter:wght@400;600&family=Pacifico&display=swap" rel="stylesheet">
+    <style>
+      :root {
+        --pastel-pink: #fce4ec;
+        --deep-pink: #f06292;
+        --gold: #ffd700;
+      }
+
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background-color: black;
+        font-family: 'Inter', sans-serif;
+        transition: background-color 2s ease;
+      }
+
+      .step-container {
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        width: 100vw;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 10;
+      }
+
+      .step-active {
+        display: flex;
+      }
+
+      .loading-spinner {
+        position: absolute;
+        bottom: 10vh;
+        color: var(--deep-pink);
+        font-weight: 600;
+        display: none;
+        animation: pulse 1s infinite alternate;
+      }
+
+      @keyframes pulse {
+        from { opacity: 0.5; transform: scale(1); }
+        to { opacity: 1; transform: scale(1.1); }
+      }
+      .glowing-btn {
+        position: absolute;
+        bottom: 10vh;
+        background-color: var(--deep-pink);
+        color: white;
+        padding: 1rem 2.5rem;
+        border-radius: 9999px;
+        font-weight: 600;
+        box-shadow: 0 0 20px var(--deep-pink);
+        transition: all 0.3s ease;
+        cursor: pointer;
+        border: none;
+        outline: none;
+        font-size: 1.25rem;
+        z-index: 20;
+      }
+
+      .btn-appear {
+        animation: btnAppear 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+      }
+
+      .btn-vanish {
+        animation: btnVanish 0.5s cubic-bezier(0.36, 0, 0.66, -0.56) forwards;
+      }
+
+      @keyframes btnAppear {
+        0% { opacity: 0; transform: scale(0.5) translateY(50px); }
+        70% { transform: scale(1.1) translateY(-10px); }
+        100% { opacity: 1; transform: scale(1) translateY(0); }
+      }
+
+      @keyframes btnVanish {
+        0% { opacity: 1; transform: scale(1); }
+        100% { opacity: 0; transform: scale(0.3) translateY(-50px); }
+      }
+
+      .glowing-btn:hover {
+        transform: scale(1.05);
+        box-shadow: 0 0 40px var(--deep-pink);
+      }
+
+      /* Fairy Lights */
+      .fairy-lights {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 150px;
+        display: none;
+        justify-content: space-around;
+        pointer-events: none;
+        z-index: 5;
+        padding-top: 20px;
+      }
+
+      .light {
+        width: 60px;
+        height: 90px;
+        border-radius: 50% 50% 40% 40%;
+        position: relative;
+        animation: twinkle 1.5s infinite alternate;
+      }
+
+      .light::before {
+        content: '';
+        position: absolute;
+        top: -15px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 25px;
+        height: 15px;
+        background: #666;
+        border-radius: 2px;
+      }
+
+      @keyframes twinkle {
+        0% { opacity: 0.4; transform: scale(0.9); box-shadow: 0 0 20px currentColor; }
+        100% { opacity: 1; transform: scale(1.1); box-shadow: 0 0 60px currentColor; }
+      }
+
+      /* Balloons */
+      .balloon {
+        position: absolute;
+        bottom: -150px;
+        width: 80px;
+        height: 100px;
+        border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
+        animation: floatUp 8s linear forwards;
+        z-index: 2;
+        box-shadow: inset -10px -10px 0 rgba(0,0,0,0.07);
+      }
+
+      .balloon::after {
+        content: '';
+        position: absolute;
+        bottom: -20px;
+        left: 50%;
+        width: 1px;
+        height: 30px;
+        background: rgba(0,0,0,0.1);
+      }
+
+      @keyframes floatUp {
+        0% { transform: translateY(0) rotate(0deg); }
+        100% { transform: translateY(-120vh) rotate(10deg); }
+      }
+
+      /* Cake & Candle */
+      .cake-container {
+        position: relative;
+        width: 250px;
+        height: 200px;
+        display: none;
+        margin-bottom: 2rem;
+      }
+
+      .cake {
+        position: absolute;
+        bottom: 20px;
+        width: 100%;
+        height: 120px;
+        background: #4e342e; /* Chocolate base */
+        border-radius: 15px 15px 5px 5px;
+        box-shadow: 0 10px 0 #3e2723, inset 0 -10px 0 #3e2723;
+        overflow: hidden;
+        z-index: 2;
+      }
+
+      .cake-plate {
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 300px;
+        height: 40px;
+        background: #e0e0e0;
+        border-radius: 50%;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        z-index: 1;
+      }
+
+      .sprinkle {
+        position: absolute;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+      }
+
+      .cake-layer {
+        position: absolute;
+        width: 100%;
+        height: 10px;
+        background: #6d4c41;
+        top: 40px;
+      }
+
+      .cake-layer-2 {
+        position: absolute;
+        width: 100%;
+        height: 10px;
+        background: #6d4c41;
+        top: 80px;
+      }
+
+      .cake::before {
+        content: '';
+        position: absolute;
+        top: -20px;
+        left: 0;
+        width: 100%;
+        height: 50px;
+        background: #efebe9; /* Cream top */
+        border-radius: 50%;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      }
+
+      .cream-drip {
+        position: absolute;
+        top: 20px;
+        width: 20px;
+        height: 30px;
+        background: #efebe9;
+        border-radius: 0 0 10px 10px;
+      }
+
+      .candle {
+        position: absolute;
+        top: -50px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 12px;
+        height: 50px;
+        background: linear-gradient(to right, #e91e63, #f06292);
+        border-radius: 3px;
+        box-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+      }
+
+      .flame {
+        position: absolute;
+        top: -15px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 12px;
+        height: 20px;
+        background: radial-gradient(circle at center, #fff, #ffeb3b, #ff9800, transparent);
+        border-radius: 50% 50% 20% 20%;
+        display: none;
+        animation: flicker 0.1s infinite alternate;
+        box-shadow: 0 0 20px #ff9800, 0 0 40px #ffeb3b;
+      }
+
+      @keyframes flicker {
+        0% { transform: translateX(-50%) scale(1); }
+        100% { transform: translateX(-50%) scale(1.1) rotate(2deg); }
+      }
+
+      /* Post-it Notes */
+      .post-it {
+        position: absolute;
+        width: 150px;
+        height: 150px;
+        padding: 1rem;
+        background: #fff9c4;
+        box-shadow: 5px 5px 10px rgba(0,0,0,0.1);
+        transform: rotate(var(--rotation));
+        font-family: 'Dancing Script', cursive;
+        font-size: 1.1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        animation: fadeIn 0.5s ease-out forwards;
+        z-index: 20;
+      }
+
+      .next-scratch-btn {
+        margin-top: 15px;
+        background: var(--deep-pink);
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 20px;
+        cursor: pointer;
+        font-family: 'Inter', sans-serif;
+        font-weight: 600;
+        display: none;
+        transition: transform 0.2s;
+      }
+
+      .next-scratch-btn:hover {
+        transform: scale(1.1);
+      }
+
+      /* Scratch Card */
+      .scratch-container {
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 300px;
+        height: 150px;
+        background: white;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        display: none;
+        z-index: 100;
+        border: 4px solid var(--deep-pink);
+      }
+
+      .scratch-content {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background: #fff;
+        font-family: 'Pacifico', cursive;
+        color: var(--deep-pink);
+        font-size: 1.5rem;
+        text-align: center;
+        padding: 10px;
+      }
+
+      #scratch-canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+        cursor: crosshair;
+        touch-action: none;
+      }
+
+      .scratch-label {
+        position: absolute;
+        bottom: 180px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-family: 'Inter', sans-serif;
+        font-weight: 600;
+        color: var(--deep-pink);
+        display: none;
+        z-index: 101;
+        background: white;
+        padding: 5px 15px;
+        border-radius: 20px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      }
+
+      @keyframes fadeIn {
+        from { opacity: 0; transform: scale(0.5) rotate(var(--rotation)); }
+        to { opacity: 1; transform: scale(1) rotate(var(--rotation)); }
+      }
+
+      .header-text {
+        font-family: 'Pacifico', cursive;
+        color: var(--deep-pink);
+        font-size: 4rem;
+        text-shadow: 2px 2px 8px rgba(0,0,0,0.2);
+        opacity: 0;
+        transform: translateY(20px);
+        transition: all 1s ease;
+        z-index: 25;
+        position: relative;
+        text-align: center;
+      }
+
+      .header-visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .stylish-birthday-text {
+        font-family: 'Pacifico', cursive;
+        font-size: 5.5rem;
+        background: linear-gradient(45deg, #f06292, #ec407a, #d81b60);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-align: center;
+        filter: drop-shadow(4px 4px 0px rgba(240, 98, 146, 0.2));
+        animation: textPop 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        margin-bottom: 2rem;
+      }
+
+      @keyframes textPop {
+        0% { transform: scale(0); opacity: 0; }
+        70% { transform: scale(1.1); }
+        100% { transform: scale(1); opacity: 1; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="fairy-lights" id="fairy-lights"></div>
+
+    <!-- Step 0: Initial State -->
+    <div class="step-container step-active" id="step-0">
+      <button class="glowing-btn" id="btn-0" onclick="nextStep(1)">Turn on lights</button>
+      <div class="loading-spinner" id="spinner-0"></div>
+    </div>
+
+    <!-- Step 1: Lights On -->
+    <div class="step-container" id="step-1">
+      <button class="glowing-btn hidden" id="btn-1" onclick="nextStep(2)">Play Music</button>
+      <div class="loading-spinner" id="spinner-1"></div>
+    </div>
+
+    <!-- Step 2: Play Music -->
+    <div class="step-container" id="step-2">
+      <button class="glowing-btn hidden" id="btn-2" onclick="nextStep(3)">Let’s Decorate</button>
+      <div class="loading-spinner" id="spinner-2"></div>
+    </div>
+
+    <!-- Step 3: Decorate (Stylish Text) -->
+    <div class="step-container" id="step-3">
+      <h2 id="stylish-birthday" class="stylish-birthday-text hidden">Happy Birthday Shreyakun!</h2>
+      <button class="glowing-btn hidden" id="btn-3" onclick="nextStep(4)">Fly the Balloons</button>
+      <div class="loading-spinner" id="spinner-3"></div>
+    </div>
+
+    <!-- Step 4: Balloons -->
+    <div class="step-container" id="step-4">
+      <button class="glowing-btn hidden" id="btn-4" onclick="nextStep(5)">Most delicious cake ever</button>
+      <div class="loading-spinner" id="spinner-4"></div>
+    </div>
+
+    <!-- Step 5: Cake -->
+    <div class="step-container" id="step-5">
+      <div class="cake-container" id="cake-container">
+        <div class="cake-plate"></div>
+        <div class="cake">
+          <div class="cake-layer"></div>
+          <div class="cake-layer-2"></div>
+          <div class="cream-drip" style="left: 10px;"></div>
+          <div class="cream-drip" style="left: 50px; height: 45px;"></div>
+          <div class="cream-drip" style="left: 100px; height: 25px;"></div>
+          <div class="cream-drip" style="left: 160px; height: 50px;"></div>
+          <div class="cream-drip" style="left: 210px; height: 35px;"></div>
+          <!-- Sprinkles -->
+          <div class="sprinkle" style="background: #ff4081; top: 10px; left: 30px;"></div>
+          <div class="sprinkle" style="background: #ffeb3b; top: 25px; left: 80px;"></div>
+          <div class="sprinkle" style="background: #00e5ff; top: 15px; left: 140px;"></div>
+          <div class="sprinkle" style="background: #b2ff59; top: 35px; left: 190px;"></div>
+          <div class="sprinkle" style="background: #ff4081; top: 60px; left: 60px;"></div>
+          <div class="sprinkle" style="background: #ffeb3b; top: 70px; left: 120px;"></div>
+          <div class="sprinkle" style="background: #00e5ff; top: 65px; left: 220px;"></div>
+        </div>
+        <div class="candle">
+          <div class="flame" id="flame"></div>
+        </div>
+      </div>
+      <button class="glowing-btn hidden" id="btn-5" onclick="nextStep(6)">Light Candles</button>
+      <div class="loading-spinner" id="spinner-5"></div>
+    </div>
+
+    <!-- Step 6: Final State -->
+    <div class="step-container" id="step-6">
+      <h1 class="header-text mb-8" id="final-header">Happy Birthday Shreya !</h1>
+      <button class="glowing-btn hidden" id="msg-btn" onclick="showMessages()">Message for you...</button>
+      <div class="loading-spinner" id="spinner-6"></div>
+    </div>
+
+    <div class="scratch-label" id="scratch-label">Scratch here for a secret! ✨</div>
+    <div class="scratch-container" id="scratch-container">
+      <div class="scratch-content">
+        <div id="scratch-text"></div>
+      </div>
+      <canvas id="scratch-canvas"></canvas>
+    </div>
+    <button class="next-scratch-btn" id="next-scratch-btn" onclick="nextSecret()" style="position: fixed; bottom: 180px; left: 50%; transform: translateX(-50%); z-index: 110;">Next Secret →</button>
+
+    <script>
+      let currentStep = 0;
+      let audio = null;
+      const BUTTON_DELAY = 5000; // 5 seconds delay
+
+      function nextStep(step) {
+        const prevBtn = document.getElementById(`btn-${currentStep}`) || document.getElementById('msg-btn');
+        const currentStepEl = document.getElementById(`step-${currentStep}`);
+
+        if (prevBtn) {
+          prevBtn.classList.add('btn-vanish');
+          setTimeout(() => {
+            // Keep Step 5 visible when moving to Step 6 so the cake stays
+            if (!(currentStep === 5 && step === 6)) {
+              currentStepEl.classList.remove('step-active');
+            } else {
+              // If moving from 5 to 6, just hide the button but keep the container
+              // Actually, step-container is flex and centered. 
+              // Better: move cake-container to body or a persistent div
+              const cake = document.getElementById('cake-container');
+              document.body.appendChild(cake);
+              cake.style.position = 'fixed';
+              cake.style.bottom = '25vh';
+              cake.style.left = '50%';
+              cake.style.transform = 'translateX(-50%)';
+              cake.style.zIndex = '15';
+              currentStepEl.classList.remove('step-active');
+            }
+
+            prevBtn.classList.remove('btn-vanish');
+            prevBtn.style.display = 'none';
+            proceedToNext();
+          }, 500); // Matches 0.5s btn-vanish
+        } else {
+          currentStepEl.classList.remove('step-active');
+          proceedToNext();
+        }
+
+        function proceedToNext() {
+          const nextContainer = document.getElementById(`step-${step}`);
+          nextContainer.classList.add('step-active');
+          
+          const nextSpinner = document.getElementById(`spinner-${step}`);
+          if (nextSpinner) nextSpinner.style.display = 'block';
+
+          currentStep = step;
+
+          if (step === 1) {
+            document.body.style.backgroundColor = '#fce4ec';
+            setupFairyLights();
+          }
+
+          if (step === 2) {
+            playMusic();
+          }
+
+          if (step === 3) {
+            const stylishText = document.getElementById('stylish-birthday');
+            stylishText.classList.remove('hidden');
+          }
+
+          if (step === 4) {
+            startBalloons();
+          }
+
+          if (step === 5) {
+            document.getElementById('cake-container').style.display = 'block';
+          }
+
+          if (step === 6) {
+            // Light the candle
+            const flame = document.getElementById('flame');
+            flame.style.display = 'block';
+            flame.style.background = 'radial-gradient(circle at center, #fff, #ffeb3b, #ff9800, transparent)';
+            flame.style.boxShadow = '0 0 25px 10px rgba(255, 235, 59, 0.8), 0 0 50px 20px rgba(255, 152, 0, 0.5)';
+            
+            setTimeout(() => {
+              document.getElementById('final-header').classList.add('header-visible');
+            }, 500);
+          }
+
+          setTimeout(() => {
+            if (nextSpinner) nextSpinner.style.display = 'none';
+            const nextBtn = document.getElementById(`btn-${step}`) || document.getElementById('msg-btn');
+            if (nextBtn) {
+              nextBtn.classList.remove('hidden');
+              nextBtn.style.display = 'block';
+              nextBtn.classList.add('btn-appear');
+              setTimeout(() => nextBtn.classList.remove('btn-appear'), 800); // Matches 0.8s btn-appear
+            }
+          }, BUTTON_DELAY);
+        }
+      }
+
+      function setupFairyLights() {
+        const container = document.getElementById('fairy-lights');
+        container.style.display = 'flex';
+        const colors = ['#ff80ab', '#ffeb3b', '#b2ff59', '#81d4fa', '#ce93d8'];
+        for (let i = 0; i < 12; i++) {
+          const light = document.createElement('div');
+          light.className = 'light';
+          light.style.backgroundColor = colors[i % colors.length];
+          light.style.color = colors[i % colors.length];
+          light.style.animationDelay = `${Math.random() * 2}s`;
+          container.appendChild(light);
+        }
+      }
+
+      function playMusic() {
+        if (!audio) {
+          audio = new Audio('./music.mp3');
+          audio.loop = true;
+          audio.play().catch(e => {
+            console.log("Audio play failed, likely missing music.mp3 or browser restriction:", e);
+          });
+        }
+      }
+
+      function startBalloons() {
+        const colors = ['#ff4081', '#7c4dff', '#00e5ff', '#ffea00', '#ff3d00', '#e91e63', '#9c27b0'];
+        
+        setInterval(() => {
+          if (currentStep >= 4) {
+            const balloon = document.createElement('div');
+            balloon.className = 'balloon';
+            balloon.style.left = `${Math.random() * 95}vw`;
+            balloon.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            balloon.style.animationDuration = `${4 + Math.random() * 4}s`;
+            balloon.style.opacity = '0.8';
+
+            document.body.appendChild(balloon);
+            setTimeout(() => balloon.remove(), 8000);
+          }
+        }, 150);
+      }
+
+      function showMessages() {
+        document.getElementById('msg-btn').style.display = 'none';
+        const messages = [
+          "Wishing you a day filled with happiness!",
+          "May all your dreams come true, Shreya!",
+          "You deserve the best birthday ever!",
+          "Stay amazing and keep shining!",
+          "Cheers to another year of greatness!",
+          "You're a true gem. Happy Birthday!",
+          "Sending you lots of love and hugs!",
+          "Hope your cake is as sweet as you!",
+          "To many more adventures together!",
+          "Happy Birthday to a wonderful soul!",
+          "Make today unforgettable!",
+          "Keep smiling, it suits you best!"
+        ];
+
+        messages.forEach((msg, index) => {
+          setTimeout(() => {
+            const postIt = document.createElement('div');
+            postIt.className = 'post-it';
+            postIt.innerText = msg;
+            postIt.style.left = `${10 + Math.random() * 70}vw`;
+            postIt.style.top = `${10 + Math.random() * 70}vh`;
+            postIt.style.setProperty('--rotation', `${(Math.random() - 0.5) * 20}deg`);
+            document.body.appendChild(postIt);
+
+            if (index === messages.length - 1) {
+              setTimeout(() => {
+                const spinner = document.getElementById('spinner-6');
+                spinner.style.display = 'block';
+                setTimeout(() => {
+                  spinner.style.display = 'none';
+                  initScratchCard();
+                }, BUTTON_DELAY);
+              }, 1000);
+            }
+          }, index * 300);
+        });
+      }
+
+      let secretIndex = 0;
+      const secretMessages = [
+        "cha khor", 
+        "onek khani happy birthday", 
+        "me sorryyyy", 
+        "choopp", 
+        "nil pajama", 
+        "onekk happi happi happi thakba"
+      ];
+
+      function initScratchCard() {
+        const container = document.getElementById('scratch-container');
+        const label = document.getElementById('scratch-label');
+        container.style.display = 'block';
+        label.style.display = 'block';
+        setupScratch();
+      }
+
+      function setupScratch() {
+        const canvas = document.getElementById('scratch-canvas');
+        const ctx = canvas.getContext('2d');
+        const textContainer = document.getElementById('scratch-text');
+        const nextBtn = document.getElementById('next-scratch-btn');
+
+        textContainer.innerText = secretMessages[secretIndex];
+        nextBtn.style.display = 'none';
+
+        canvas.width = 300;
+        canvas.height = 150;
+
+        // Reset globalCompositeOperation explicitly
+        ctx.globalCompositeOperation = 'source-over';
+        
+        // Fill with cover color
+        ctx.fillStyle = '#f06292';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Add text to the cover
+        ctx.fillStyle = 'white';
+        ctx.font = 'bold 22px Inter';
+        ctx.textAlign = 'center';
+        ctx.fillText('Scratch to Reveal!', 150, 85);
+
+        let isDrawing = false;
+
+        function getMousePos(e) {
+          const rect = canvas.getBoundingClientRect();
+          const clientX = e.clientX || (e.touches && e.touches[0].clientX);
+          const clientY = e.clientY || (e.touches && e.touches[0].clientY);
+          return {
+            x: clientX - rect.left,
+            y: clientY - rect.top
+          };
+        }
+
+        function scratch(e) {
+          if (!isDrawing) return;
+          
+          const pos = getMousePos(e);
+
+          ctx.globalCompositeOperation = 'destination-out';
+          ctx.beginPath();
+          ctx.arc(pos.x, pos.y, 25, 0, Math.PI * 2);
+          ctx.fill();
+
+          checkScratchPercentage();
+        }
+
+        function checkScratchPercentage() {
+          const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+          let count = 0;
+          for (let i = 3; i < imageData.data.length; i += 4) {
+            if (imageData.data[i] === 0) count++;
+          }
+          
+          const totalPixels = canvas.width * canvas.height;
+          if (count > totalPixels * 0.35) { // 35% scratched
+            if (secretIndex < secretMessages.length - 1) {
+              nextBtn.style.display = 'block';
+            } else {
+              // Final message revealed
+              setTimeout(() => {
+                document.getElementById('scratch-label').innerText = "That's all the secrets! ❤️";
+                nextBtn.style.display = 'none';
+              }, 500);
+            }
+          }
+        }
+
+        canvas.onmousedown = () => isDrawing = true;
+        canvas.ontouchstart = (e) => {
+          isDrawing = true;
+          scratch(e);
+        };
+        window.onmouseup = () => isDrawing = false;
+        window.ontouchend = () => isDrawing = false;
+        canvas.onmousemove = scratch;
+        canvas.ontouchmove = (e) => {
+          e.preventDefault();
+          scratch(e);
+        };
+      }
+
+      function nextSecret() {
+        secretIndex++;
+        setupScratch();
+      }
+    </script>
+  </body>
+</html>
+
